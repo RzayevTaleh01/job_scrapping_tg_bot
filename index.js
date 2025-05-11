@@ -33,12 +33,16 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const CHANNEL_USERNAME = process.env.CHANNEL_USERNAME;
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: true });
 
-const allowedUsers = [0, 1];
+const allowedUsers = process.env.ALLOWED_USERS
+  ? process.env.ALLOWED_USERS.split(',').map(id => parseInt(id.trim(), 10))
+  : [];
+
 const isAllowed = (userId) => allowedUsers.includes(userId);
+
 
 // ==== Scraper ====
 async function scrapeJobs() {
-  const url = 'https://www.hellojob.az/is-elanlari/texnologiya/proqramlasdirma';
+const url = process.env.JOB_URL;
   const { data } = await axios.get(url);
   const $ = cheerio.load(data);
 
