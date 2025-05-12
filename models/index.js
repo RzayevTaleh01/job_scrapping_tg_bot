@@ -1,3 +1,4 @@
 const Job = require('./Job');
 const ScrapeInfo = require('./ScrapeInfo');
-module.exports = { Job, ScrapeInfo };
+const Intern = require('./Intern');
+module.exports = { Job,Intern, ScrapeInfo };

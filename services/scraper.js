@@ -28,10 +28,11 @@ async function scrapeJobs() {
     }
 
     await ScrapeInfo.findOneAndUpdate(
-        {},
+        { sourceId: 1 },
         { lastScrapedAt: new Date() },
         { upsert: true, new: true }
     );
+
 
     return { total: jobs.length, added: addedCount };
 }
