@@ -47,9 +47,13 @@ npm install
 Add your environment variables in a `.env` file:
 
 ```env
-TELEGRAM_TOKEN=your_telegram_bot_token
-CHANNEL_USERNAME=@your_channel_username
 MONGO_URI=your_mongodb_connection_string
+TELEGRAM_TOKEN=your_telegram_bot_token
+TEST_CHANNEL_USERNAME=@your_tg_channel_test
+PROD_CHANNEL_USERNAME=@your_tg_channel_prod
+ALLOWED_USERS=your_tg_user_id,your_tg_user_id2
+JOB_URL=https://www.hellojob.az/is-elanlari/texnologiya/proqramlasdirma
+CHANNEL_USERNAME=@your_channel_username
 ```
 
 ### 4. Start the Bot
@@ -69,8 +73,10 @@ The bot will run on port `3000`.
 | `/start`            | Show bot status and statistics               |
 | `/help`             | Display available commands                   |
 | `/scrap`            | Scrape and store the latest job posts        |
-| `/send`             | Send the next 10 unsent jobs to the channel  |
-| `/send <jobId>`     | Send a specific job post by its ID           |
+| `/send prod`             | Send the next 10 unsent jobs to the prod channel  |
+| `/send test`             | Send the next 10 unsent jobs to the test channel  |
+| `/send prod <jobId>`     | Send a specific job post by its ID to the prod channel           |
+| `/send test <jobId>`     | Send a specific job post by its ID to the test channel           |
 | `/list`             | List the 10 most recent scraped jobs         |
 | `/log`              | Show the last 10 sent jobs                   |
 
