@@ -1,62 +1,102 @@
-const { Job } = require('../../models');
+const {Job, Intern} = require('../../models');
 
 module.exports = function (bot, isAllowed, prodChannel, testChannel) {
-    async function sendBatchPendingJobs(channelUsername, chatId = null) {
+    async function sendBatchPendingItems(Model, channelUsername, chatId = null) {
         const isProd = channelUsername === prodChannel;
         const statuses = isProd ? ['pending', 'test'] : ['pending'];
-        const jobsToSend = await Job.find({ status: { $in: statuses } }).limit(10);
+        const itemsToSend = await Model.find({status: {$in: statuses}}).limit(10);
 
-        if (!jobsToSend.length) {
+        if (!itemsToSend.length) {
             if (chatId) bot.sendMessage(chatId, 'Gözləmədə vakansiya yoxdur.');
             return;
         }
 
-        let msgText = '📤 Sonuncu əlavə edilmiş vakansiyalar:\n\n';
-        for (const job of jobsToSend) {
-            msgText += `💼 *${job.title}*\n🏢 ${job.company}\n📅 ${job.date}\n🔗 [Elana keçid](${job.link})\n\n`;
+        const isIntern = Model.modelName === 'Intern';
+        let msgText = isIntern ? '🧪 *Yeni təcrübə proqramları:*\n\n' : '📤 Sonuncu əlavə edilmiş vakansiyalar:\n\n';
 
-            job.status = isProd ? 'prod' : 'test';
-            await job.save();
+        for (const item of itemsToSend) {
+
+            if (isIntern) {
+                msgText += `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n🔗 [Müraciət Et](${item.apply_link})\n\n`;
+            } else {
+                msgText += `💼 *${item.title}*\n🏢 ${item.company}\n📅 ${item.date}\n🔗 [Elana keçid](${item.link})\n\n`;
+            }
+            item.status = isProd ? 'prod' : 'test';
+            await item.save();
         }
 
         msgText += `\n@TechCodeAz | TechCode.Az`;
 
-        await bot.sendMessage(channelUsername, msgText, { parse_mode: 'Markdown' });
-        if (chatId) bot.sendMessage(chatId, '✅ Vakansiyalar göndərildi!');
+        await bot.sendMessage(channelUsername, msgText, {parse_mode: 'Markdown'});
+        if (chatId) bot.sendMessage(chatId, '✅ Göndərildi!');
     }
 
-    async function sendJobById(jobId, channelUsername, chatId = null) {
+    async function sendItemById(Model, itemId, channelUsername, chatId = null) {
         try {
-            const job = await Job.findById(jobId);
-            if (!job) return bot.sendMessage(chatId, '❌ Vakansiya tapılmadı.');
+            const item = await Model.findById(itemId);
+            if (!item) return bot.sendMessage(chatId, '❌ Tapılmadı.');
 
-            const message = `💼 *${job.title}*\n🏢 ${job.company}\n📅 ${job.date}\n🔗 [Elana keçid](${job.link})\n@TechCodeAz | TechCode.Az`;
-            await bot.sendMessage(channelUsername, message, { parse_mode: 'Markdown' });
+            let message;
+            const isIntern = Model.modelName === 'Intern';
 
-            job.status = channelUsername === prodChannel ? 'prod' : 'test';
-            await job.save();
+            if (isIntern) {
+                message = `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n🔗 [Müraciət Et](${item.apply_link})\n\n${item.description}\n\n@TechCodeAz | TechCode.Az`;
+            } else {
+                message = `💼 *${item.title}*\n🏢 ${item.company}\n📅 ${item.date}\n🔗 [Elana keçid](${item.link})\n@TechCodeAz | TechCode.Az`;
+            }
 
-            if (chatId) bot.sendMessage(chatId, '✅ Vakansiya göndərildi!');
+            await bot.sendMessage(channelUsername, message, {parse_mode: 'Markdown'});
+
+            item.status = channelUsername === prodChannel ? 'prod' : 'test';
+            await item.save();
+
+            if (chatId) bot.sendMessage(chatId, '✅ Göndərildi!');
         } catch (err) {
             console.error(err);
             bot.sendMessage(chatId, '❌ Xəta baş verdi!');
         }
     }
 
-    bot.onText(/\/send (prod|test)$/, async (msg, match) => {
+    bot.onText(/\/send$/, async (msg) => {
         const chatId = msg.chat.id;
         if (!isAllowed(chatId)) return;
 
-        const channel = match[1] === 'prod' ? prodChannel : testChannel;
-        await sendBatchPendingJobs(channel, chatId);
+        const message = `📤 Hansı modeldən və kanala göndərmək istəyirsiniz?
+
+Misallar:
+• /send prod 1 - HelloJob vakansiyalarını proda göndər
+• /send test 1 - HelloJob vakansiyalarını testə göndər
+• /send prod 2 - Təcrübə proqramlarını proda göndər
+• /send test 2 - Təcrübə proqramlarını testə göndər
+
+Vakansiyanı ID ilə göndərmək üçün:
+• /send prod 1 <id>
+• /send test 2 <id>`;
+
+        bot.sendMessage(chatId, message);
     });
 
-    bot.onText(/\/send (prod|test) (\w+)/, async (msg, match) => {
+    bot.onText(/\/send (prod|test) (\d)?$/, async (msg, match) => {
         const chatId = msg.chat.id;
         if (!isAllowed(chatId)) return;
 
         const channel = match[1] === 'prod' ? prodChannel : testChannel;
-        const jobId = match[2];
-        await sendJobById(jobId, channel, chatId);
+        const modelOption = match[2];
+
+        const Model = modelOption === '2' ? Intern : Job;
+        await sendBatchPendingItems(Model, channel, chatId);
+    });
+
+
+    bot.onText(/\/send (prod|test) (\d) (\w+)/, async (msg, match) => {
+        const chatId = msg.chat.id;
+        if (!isAllowed(chatId)) return;
+
+        const channel = match[1] === 'prod' ? prodChannel : testChannel;
+        const modelOption = match[2];
+        const itemId = match[3];
+
+        const Model = modelOption === '2' ? Intern : Job;
+        await sendItemById(Model, itemId, channel, chatId);
     });
 };

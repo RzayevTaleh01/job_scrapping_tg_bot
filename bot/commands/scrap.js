@@ -1,16 +1,16 @@
 const {Job, Intern, ScrapeInfo} = require('../../models');
 const helloJobScraper = require('../../services/scraper'); // 1 - HelloJob
 const tecrubeAzScraper = require('../../services/tecrubeAzScraper'); // 2 - Tecrube.Az
+require('dotenv').config(); // .env-dən oxumaq üçün
+
+let modelName = [];
+try {
+    modelName = JSON.parse(process.env.MODEL_NAMES);
+} catch (err) {
+    console.error('❌ MODEL_NAMES .env faylında düzgün JSON deyil:', err.message);
+}
 
 module.exports = function (bot, isAllowed) {
-    let modelName = [{
-        id: 1,
-        name: 'HelloJob.Az'
-    }, {
-        id: 2,
-        name: 'Tecrube.Az'
-    }]
-
     bot.onText(/\/scrap(?:\s(\d+))?/, async (msg, match) => {
         const chatId = msg.chat.id;
         if (!isAllowed(chatId)) return;
@@ -26,31 +26,36 @@ module.exports = function (bot, isAllowed) {
 
         let scraperFn;
         let Model;
-        let sourceId;
+        let sourceId = parseInt(option);
 
-        if (option === '1') {
+        if (sourceId === 1) {
             scraperFn = helloJobScraper;
             Model = Job;
-            sourceId = 1;
-        } else if (option === '2') {
+        } else if (sourceId === 2) {
             scraperFn = tecrubeAzScraper;
             Model = Intern;
-            sourceId = 2;
         } else {
             return bot.sendMessage(chatId, "❌ Yanlış seçim. Zəhmət olmasa 1 və ya 2 daxil edin.");
         }
 
         try {
-            const result = await scraperFn(); // bu funksiyalar öz içində modelə save edir
+            const result = await scraperFn();
+            console.log(result)
             const total = await Model.countDocuments();
-            console.log(option)
             const info = await ScrapeInfo.findOne({sourceId});
             const lastScrapedAt = info?.lastScrapedAt?.toLocaleString() || 'Yoxdur';
             const testJobs = await Model.countDocuments({status: 'test'});
             const prodJobs = await Model.countDocuments({status: 'prod'});
 
-            const message = `🔍 ${modelName.find(x => x.id == option).name} - Scraping tamamlandı!
-            \n📅 Son scraping: ${lastScrapedAt}\n📥 Saytdan çəkilən: ${result.total}\n🆕 Yeni əlavə edilən: ${result.added}\n📦 Cəmi saxlanılan: ${total}\n📤 Göndərilmiş (Prod): ${prodJobs}\n🧪 Göndərilmiş (Test): ${testJobs}`;
+            const site = modelName.find(x => x.id === sourceId);
+            const message = `🔍 ${site?.name || 'Sayt'} - Scraping tamamlandı!
+📅 Son scraping: ${lastScrapedAt}
+📥 Saytdan çəkilən: ${result.total}
+🆕 Yeni əlavə edilən: ${result.added}
+📦 Cəmi saxlanılan: ${total}
+📤 Göndərilmiş (Prod): ${prodJobs}
+🧪 Göndərilmiş (Test): ${testJobs}`;
+
             bot.sendMessage(chatId, message);
         } catch (error) {
             console.error(error);

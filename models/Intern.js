@@ -5,6 +5,9 @@ const internSchema = new mongoose.Schema({
     company: {
         type: String,
     },
+    base_url: {
+        type: String,
+    },
     head: {
         type: String,
         required: true,
