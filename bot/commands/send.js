@@ -17,7 +17,7 @@ module.exports = function (bot, isAllowed, prodChannel, testChannel) {
         for (const item of itemsToSend) {
 
             if (isIntern) {
-                msgText += `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n🔗 [Müraciət Et](${item.apply_link})\n\n`;
+                msgText += `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n${item.base_url ? `🔗 [Elana keçid](${item.base_url})\n` : ""}${item.apply_link ? `✅ [Müraciət Et](${item.apply_link})\n` : ""}\n`;
             } else {
                 msgText += `💼 *${item.title}*\n🏢 ${item.company}\n📅 ${item.date}\n🔗 [Elana keçid](${item.link})\n\n`;
             }
@@ -40,7 +40,7 @@ module.exports = function (bot, isAllowed, prodChannel, testChannel) {
             const isIntern = Model.modelName === 'Intern';
 
             if (isIntern) {
-                message = `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n🔗 [Müraciət Et](${item.apply_link})\n\n${item.description}\n\n@TechCodeAz | TechCode.Az`;
+                message = `🎓 *${item.head}*\n🏢 ${item.company}\n📅 Başlama: ${item.start_date}\n📅 Bitmə: ${item.end_date}\n🔗 [Elana keçid](${item.base_url})\n${item.apply_link ? `🔗 [Müraciət Et](${item.apply_link})\n` : ""}\n${item.description}\n\n@TechCodeAz | TechCode.Az`;
             } else {
                 message = `💼 *${item.title}*\n🏢 ${item.company}\n📅 ${item.date}\n🔗 [Elana keçid](${item.link})\n@TechCodeAz | TechCode.Az`;
             }

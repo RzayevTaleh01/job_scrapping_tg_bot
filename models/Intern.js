@@ -18,7 +18,6 @@ const internSchema = new mongoose.Schema({
     },
     apply_link: {
         type: String,
-        required: true,
     },
     start_date: {
         type: String,

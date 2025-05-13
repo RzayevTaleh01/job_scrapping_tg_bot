@@ -46,12 +46,10 @@ module.exports = function (bot, isAllowed) {
             msgText += `🆔 \`${j._id}\`\n💼 ${j.title || j.head}\n🏢 ${j.company}\n`;
 
             if (option === '2') {
-                const start = j.start_date ? new Date(j.start_date).toLocaleDateString() : 'Yoxdur';
-                const end = j.end_date ? new Date(j.end_date).toLocaleDateString() : 'Yoxdur';
-                msgText += `📅 Tarix: ${start} - ${end}\n`;
+                msgText += `📅 Tarix: ${j.start_date} - ${j.end_date}\n`;
             }
 
-            msgText += `🔗 ${j.link || j.apply_link}\n📌 Status: ${j.status || 'yoxdur'}\n\n`;
+            msgText += `🔗 ${j.link || j.base_url}\n📌 Status: ${j.status || 'yoxdur'}\n\n`;
         });
 
         bot.sendMessage(chatId, msgText, { parse_mode: 'Markdown' });
