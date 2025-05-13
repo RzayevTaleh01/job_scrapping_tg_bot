@@ -31,7 +31,7 @@ async function getFullHtmlWithJS(url) {
     return { html: content, ...dates };
 }
 
-async function scrapeTecrubeAz() {
+async function scrapeTecrubeAz(bot=null , chatID=null) {
     const { data } = await axios.get(START_URL);
     const $ = cheerio.load(data);
     const cardLinks = [];
