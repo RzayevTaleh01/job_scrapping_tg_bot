@@ -14,7 +14,6 @@ This bot automates job and internship sharing from platforms like **HelloJob.az*
 - Prevent duplicate posts
 - Track scraping history
 - Restrict bot usage to **admins only**
-
 ---
 
 ## ⚙️ Technologies Used
