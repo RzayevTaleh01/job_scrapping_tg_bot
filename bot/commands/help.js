@@ -3,26 +3,29 @@ module.exports = function (bot, isAllowed) {
         const chatId = msg.chat.id;
         if (!isAllowed(chatId)) return;
 
-        const helpText = `🆘 *Əmrlər siyahısı*:
+        const helpText = `🆘 *Əmrlər siyahısı*
 
 🔧 *Ümumi əmrlər*
-\`/start\` - Botun statusunu göstər  
-\`/help\` - Komandaların siyahısı  
-\`/scrap\` - Scraping üçün model seç  
-\`/scrap <model id>\` - Modelə görə scraping et  
+\`/start\` – Botun statusunu göstər  
+\`/help\` – Komandaların siyahısı  
+\`/scrap\` – Scraping üçün model seç  
+\`/scrap <model id>\` – Modelə görə scraping et  
 
 📤 *Vakansiya göndərmə*
-\`/send\` - Vakansiya göndərmək üçün model seç  
-\`/send prod <model id>\` - Növbəti 10 vakansiyanı modelə uyğun prod kanalına göndər  
-\`/send test <model id>\` - Növbəti 10 vakansiyanı modelə uyğun test kanalına göndər  
-\`/send prod <model id> <id>\` - ID üzrə bir vakansiyanı modelə uyğun prod kanalına göndər  
-\`/send test <model id> <id>\` - ID üzrə bir vakansiyanı modelə uyğun test kanalına göndər  
+\`/send\` – Vakansiya göndərmək üçün model seç  
+\`/send prod <model id>\` – Növbəti 10 vakansiyanı *prod* kanalına göndər  
+\`/send test <model id>\` – Növbəti 10 vakansiyanı *test* kanalına göndər  
+\`/send prod <model id> <id>\` – Seçilmiş vakansiyanı *prod* kanalına göndər  
+\`/send test <model id> <id>\` – Seçilmiş vakansiyanı *test* kanalına göndər  
 
 📋 *Vakansiya siyahısı*
-\`/list <model id>\` - Modelə uyğun bazadakı vakansiyalar  
+\`/list\` – Model və status seçimi üçün təlimat  
+\`/list <model id>\` – Modelə uyğun vakansiyalar (bütün statuslar)  
+\`/list <model id> <status>\` – Modelə uyğun və statusa görə vakansiyalar  
+💡 *Misal:* \`/list 1 pending\`
 
-📜 *Proda göndərilmişlər loglar*
-\`/log <model id>\` - Modelə uyğun proda göndərilmiş vakansiyalar`;
+📜 *Loglar*
+\`/log <model id>\` – Modelə uyğun proda göndərilmiş vakansiyalar`;
 
         bot.sendMessage(chatId, helpText, { parse_mode: 'Markdown' });
     });
