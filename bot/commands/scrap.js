@@ -1,7 +1,7 @@
 const {Job, Intern, ScrapeInfo} = require('../../models');
-const helloJobScraper = require('../../services/scraper'); // 1 - HelloJob
-const tecrubeAzScraper = require('../../services/tecrubeAzScraper'); // 2 - Tecrube.Az
-require('dotenv').config(); // .env-dən oxumaq üçün
+const helloJobScraper = require('../../services/scraper_model_1');
+const tecrubeAzScraper = require('../../services/scrapper_model_2');
+require('dotenv').config();
 
 let modelName = [];
 try {

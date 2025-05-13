@@ -16,10 +16,10 @@ module.exports = function (bot, isAllowed) {
         const option = match[1];
 
         if (!option) {
-            const listOptions = `📌 Hansı saytdan vakansiya siyahısı göstərilsin?\n\n` +
+            const listOptions = `*📌 Hansı saytdan vakansiya siyahısı göstərilsin?*\n\n` +
                 modelName.map(site => `${site.id} - ${site.name}`).join('\n') +
-                `\n\nMisal: /list 2`;
-            return bot.sendMessage(chatId, listOptions);
+                `\n\n✏️ Misal:\`/list 2\``;
+            return bot.sendMessage(chatId, listOptions, { parse_mode: 'Markdown' });
         }
 
         let Model;

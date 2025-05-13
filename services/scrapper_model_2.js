@@ -5,7 +5,7 @@ const Intern = require('../models/Intern');
 const ScrapeInfo = require('../models/ScrapeInfo');
 
 const BASE_URL = 'https://tecrube.az';
-const START_URL = `${BASE_URL}/vacancies?category=tecrube-proqramlari&city=Baku&page=2&postedDate=month`;
+const START_URL = `${BASE_URL}/vacancies?category=tecrube-proqramlari&city=Baku&page=1&postedDate=month`;
 
 async function getFullHtmlWithJS(url) {
     const browser = await puppeteer.launch({ headless: 'new' });

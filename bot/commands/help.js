@@ -5,15 +5,24 @@ module.exports = function (bot, isAllowed) {
 
         const helpText = `🆘 *Əmrlər siyahısı*:
 
-  /start - Botun statusu
-  /help - Komandaların siyahısı
-  /scrap - Saytdan vakansiya yığ
-  /send prod - prod kanalına 10 vakansiya göndər
-  /send test - test kanalına 10 vakansiya göndər
-  /send prod <id> - prod kanalına bir vakansiya göndər
-  /send test <id> - test kanalına bir vakansiya göndər
-  /list - Son 10 vakansiyanı göstər
-  /log - Son 10 göndərilmiş vakansiyanı göstər`;
+🔧 *Ümumi əmrlər*
+\`/start\` - Botun statusunu göstər  
+\`/help\` - Komandaların siyahısı  
+\`/scrap\` - Scraping üçün model seç  
+\`/scrap <model id>\` - Modelə görə scraping et  
+
+📤 *Vakansiya göndərmə*
+\`/send\` - Vakansiya göndərmək üçün model seç  
+\`/send prod <model id>\` - Növbəti 10 vakansiyanı modelə uyğun prod kanalına göndər  
+\`/send test <model id>\` - Növbəti 10 vakansiyanı modelə uyğun test kanalına göndər  
+\`/send prod <model id> <id>\` - ID üzrə bir vakansiyanı modelə uyğun prod kanalına göndər  
+\`/send test <model id> <id>\` - ID üzrə bir vakansiyanı modelə uyğun test kanalına göndər  
+
+📋 *Vakansiya siyahısı*
+\`/list <model id>\` - Modelə uyğun bazadakı vakansiyalar  
+
+📜 *Proda göndərilmişlər loglar*
+\`/log <model id>\` - Modelə uyğun proda göndərilmiş vakansiyalar`;
 
         bot.sendMessage(chatId, helpText, { parse_mode: 'Markdown' });
     });

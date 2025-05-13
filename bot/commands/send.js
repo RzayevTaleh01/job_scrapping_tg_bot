@@ -61,19 +61,20 @@ module.exports = function (bot, isAllowed, prodChannel, testChannel) {
         const chatId = msg.chat.id;
         if (!isAllowed(chatId)) return;
 
-        const message = `📤 Hansı modeldən və kanala göndərmək istəyirsiniz?
+        const message = `📤 *Vakansiya göndərmək üçün model və kanal seçin:*
 
 Misallar:
-• /send prod 1 - HelloJob vakansiyalarını proda göndər
-• /send test 1 - HelloJob vakansiyalarını testə göndər
-• /send prod 2 - Təcrübə proqramlarını proda göndər
-• /send test 2 - Təcrübə proqramlarını testə göndər
+\`/send prod 1\` – HelloJob vakansiyalarını *prod* kanalına göndər  
+\`/send test 1\` – HelloJob vakansiyalarını *test* kanalına göndər  
+\`/send prod 2\` – Təcrübə proqramlarını *prod* kanalına göndər  
+\`/send test 2\` – Təcrübə proqramlarını *test* kanalına göndər
 
-Vakansiyanı ID ilə göndərmək üçün:
-• /send prod 1 <id>
-• /send test 2 <id>`;
+📌 *ID ilə göndərmək üçün:*
+\`/send prod 1 <id>\`  
+\`/send test 2 <id>\`
+`;
 
-        bot.sendMessage(chatId, message);
+        bot.sendMessage(chatId, message, {parse_mode: 'Markdown'});
     });
 
     bot.onText(/\/send (prod|test) (\d)?$/, async (msg, match) => {
